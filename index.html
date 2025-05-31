@@ -1,78 +1,217 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>lucky</title>
-    <style>
-        div {
-            margin: 50px 10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>椰子冻配比计算器</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9fafa;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 30px;
+      color: #00a893;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      border-color: #00a893;
+      outline: none;
+    }
+
+    button {
+      padding: 10px 16px;
+      font-size: 16px;
+      background-color: #00c2a8;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-top: 10px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #00a58e;
+    }
+
+    .result, .tips {
+      margin-top: 25px;
+      background: #f2f8f7;
+      border-left: 4px solid #00a893;
+      padding: 15px 20px;
+      border-radius: 8px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .tips {
+      border-color: #999;
+      background: #f7f7f7;
+      margin-top: 40px;
+    }
+
+    .tips-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #555;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 20px;
+      }
+
+      button {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <div class="container">
+    <h1>椰子冻配比计算器</h1>
 
-    <div>输入牛奶和淡奶油混合液重量：<input style="width: 90px" value="0" id="i1" type="number">g</div>
-    <div>输入兑好椰奶混合液重量：<input style="width: 90px" value="0" id="i3" type="number">g</div>
-    <div>预计做多少个椰子冻的量：<input value="10" style="width: 100px" id="i2" type="number">个</div>
-    <div><button onClick="calculate()">辅料椰子冻</button></div>
-    <div><button onClick="calculateK()">带壳椰子冻</button></div>
-<!--     <div><button onClick="calculateXH()">带壳椰子冻(徐汇店专用)</button></div> -->
-    <div id="result"></div>
+    <div class="form-group">
+      <label>输入牛奶和淡奶油混合液重量 (g)</label>
+      <input id="i1" type="number" value="0">
+    </div>
 
+    <div class="form-group">
+      <label>输入兑好椰奶混合液重量 (g)</label>
+      <input id="i3" type="number" value="0">
+    </div>
 
-    <label for="pet-select">椰奶万能配方:</label>
-    <div>中杯= 牛奶113g，淡奶油28g,椰子水最后加到对应刻度线</div>
-    <div>大杯= 牛奶153g，淡奶油38g,椰子水最后加到对应刻度线</div>
-    <label for="pet-select">酸奶万能配方:</label>
-    <div>中杯= 牛奶121g，淡奶油30g,椰浆45g,蒙马酸奶最后加到对应刻度线</div>
-    <div>大杯= 牛奶165g，淡奶油41g,椰浆62g,蒙马酸奶最后加到对应刻度线</div>
- 
-    <div>预计调椰奶的量：<input value="2000" style="width: 100px" id="i4" type="number">g</div>
-    <div><button onClick="calculateY()">点我计算椰奶</button></div>
+    <div class="form-group">
+      <label>预计制作的椰子冻数量 (个)</label>
+      <input id="i2" type="number" value="10">
+    </div>
 
-    <div id="result1"></div>
-    <script>
-        const i1 = document.querySelector('#i1');
-        const i2 = document.querySelector('#i2');
-        const i3 = document.querySelector('#i3');
-        const i4 = document.querySelector('#i4');
-        const result = document.querySelector('#result');
-        const result1 = document.querySelector('#result1');
-        const base = { milk: 105, cream: 25, sugar: 8.2, water: 125, jld: 1 }
-        const base1 = { milk: 0.320, cream: 0.08,water: 0.6 }
-        const base2 = { milk: 115, cream: 50, sugar: 10, water: 90, jld: 1 }
-        const base3 = { milk: 80, cream: 25, sugar: 9.7, water: 150, jld: 1 }
-        calculate = () => {
-            let milk = i1.value * 0.8+i3.value * 0.32
-            let water = i3.value * 0.6
-            let cream = i1.value * 0.2+i3.value * 0.08, n = i2.value;
-            console.log(n, n * base.milk - milk, n * base.cream - cream)
-            let str = `需再加入：牛奶=${n * base.milk - milk}克(g) 雀巢淡奶油=${n * base.cream - cream}克(g) 椰子水=${n * base.water-water}克(g) 糖=${n * base.sugar}克(g) 吉利丁片=${n * base.jld}片`
-            result.innerHTML = str
-        }
-        calculateK = () => {
-            let milk = i1.value * 0.8+i3.value * 0.32
-            let water = i3.value * 0.6
-            let cream = i1.value * 0.2+i3.value * 0.08, n = i2.value;
-            let str = `需再加入：牛奶=${n * base2.milk - milk}克(g) 发喜淡奶油=${n * base2.cream - cream}克(g) 椰子水=${n * base2.water-water}克(g) 糖=${n * base2.sugar}克(g) 吉利丁片=${n * base2.jld}片`
-            result.innerHTML = str
-        }
-        calculateXH = () => {
-            let milk = i1.value * 0.8+i3.value * 0.32
-            let water = i3.value * 0.6
-            let cream = i1.value * 0.2+i3.value * 0.08, n = i2.value;
-            let str = `需再加入：牛奶=${n * base3.milk - milk}克(g) 发喜淡奶油=${n * base3.cream - cream}克(g) 椰子水=${n * base3.water-water}克(g) 糖=${n * base3.sugar}克(g) 吉利丁片=${n * base3.jld}片`
-            result.innerHTML = str
-        }
-        calculateY = () => {
-            let y = i4.value
-            let str = `需加入：牛奶=${y * base1.milk}克(g) 雀巢淡奶油=${y * base1.cream}克(g) 椰子水=${y * base1.water}克(g)`
-            result1.innerHTML = str
-        }
-    </script>
+    <button onclick="calculate()">辅料椰子冻</button>
+    <button onclick="calculateK()">带壳椰子冻</button>
+<!--     <button onclick="calculateXH()">带壳椰子冻(徐汇店专用)</button> -->
+
+    <div class="result" id="result"></div>
+
+    <div class="tips">
+      <div class="tips-title">椰奶万能配方</div>
+      <div>中杯：牛奶113g，淡奶油28g，椰子水加至刻度线</div>
+      <div>大杯：牛奶153g，淡奶油38g，椰子水加至刻度线</div>
+
+      <div class="tips-title" style="margin-top: 20px;">酸奶万能配方</div>
+      <div>中杯：牛奶121g，淡奶油30g，椰浆45g，酸奶加至刻度线</div>
+      <div>大杯：牛奶165g，淡奶油41g，椰浆62g，酸奶加至刻度线</div>
+    </div>
+
+    <div class="form-group" style="margin-top: 30px;">
+      <label>预计调椰奶的总重量 (g)</label>
+      <input id="i4" type="number" value="2000">
+    </div>
+
+    <button onclick="calculateY()">点我计算椰奶</button>
+
+    <div class="result" id="result1"></div>
+  </div>
+
+  <script>
+    const i1 = document.querySelector('#i1');
+    const i2 = document.querySelector('#i2');
+    const i3 = document.querySelector('#i3');
+    const i4 = document.querySelector('#i4');
+    const result = document.querySelector('#result');
+    const result1 = document.querySelector('#result1');
+
+    const base = { milk: 105, cream: 25, sugar: 8.2, water: 125, jld: 1 };
+    const base1 = { milk: 0.320, cream: 0.08, water: 0.6 };
+    const base2 = { milk: 115, cream: 50, sugar: 10, water: 90, jld: 1 };
+    const base3 = { milk: 80, cream: 25, sugar: 9.7, water: 150, jld: 1 };
+
+    function calculate() {
+      let milk = i1.value * 0.8 + i3.value * 0.32;
+      let water = i3.value * 0.6;
+      let cream = i1.value * 0.2 + i3.value * 0.08;
+      let n = i2.value;
+
+      let str = `
+        需再加入：<br>
+        - 牛奶：<strong>${(n * base.milk - milk).toFixed(1)}</strong> g<br>
+        - 雀巢淡奶油：<strong>${(n * base.cream - cream).toFixed(1)}</strong> g<br>
+        - 椰子水：<strong>${(n * base.water - water).toFixed(1)}</strong> g<br>
+        - 糖：<strong>${(n * base.sugar).toFixed(1)}</strong> g<br>
+        - 吉利丁片：<strong>${(n * base.jld).toFixed(1)}</strong> 片
+      `;
+      result.innerHTML = str;
+    }
+
+    function calculateK() {
+      let milk = i1.value * 0.8 + i3.value * 0.32;
+      let water = i3.value * 0.6;
+      let cream = i1.value * 0.2 + i3.value * 0.08;
+      let n = i2.value;
+
+      let str = `
+        需再加入：<br>
+        - 牛奶：<strong>${(n * base2.milk - milk).toFixed(1)}</strong> g<br>
+        - 发喜淡奶油：<strong>${(n * base2.cream - cream).toFixed(1)}</strong> g<br>
+        - 椰子水：<strong>${(n * base2.water - water).toFixed(1)}</strong> g<br>
+        - 糖：<strong>${(n * base2.sugar).toFixed(1)}</strong> g<br>
+        - 吉利丁片：<strong>${(n * base2.jld).toFixed(1)}</strong> 片
+      `;
+      result.innerHTML = str;
+    }
+
+    function calculateY() {
+      let y = i4.value;
+      let str = `
+        需加入：<br>
+        - 牛奶：<strong>${(y * base1.milk).toFixed(1)}</strong> g<br>
+        - 雀巢淡奶油：<strong>${(y * base1.cream).toFixed(1)}</strong> g<br>
+        - 椰子水：<strong>${(y * base1.water).toFixed(1)}</strong> g
+      `;
+      result1.innerHTML = str;
+    }
+  </script>
 </body>
-
 </html>
