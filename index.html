@@ -131,7 +131,7 @@
 
     <button onclick="calculate()">辅料椰子冻</button>
     <button onclick="calculateK()">带壳椰子冻</button>
-<!--     <button onclick="calculateXH()">带壳椰子冻(徐汇店专用)</button> -->
+    <button onclick="calculateNew()">带壳椰子冻(真椰子水版本)</button>
 
     <div class="result" id="result"></div>
 
@@ -163,10 +163,10 @@
     const result = document.querySelector('#result');
     const result1 = document.querySelector('#result1');
 
-    const base = { milk: 105, cream: 25, sugar: 8.2, water: 125, jld: 1 };
+    const base = { milk: 140, cream: 15, sugar: 8.2, water: 100, jld: 1 };
     const base1 = { milk: 0.320, cream: 0.08, water: 0.6 };
     const base2 = { milk: 115, cream: 50, sugar: 10, water: 90, jld: 1 };
-    const base3 = { milk: 80, cream: 25, sugar: 9.7, water: 150, jld: 1 };
+    const base3 = { milk: 100, cream: 25, sugar: 14, water: 130, jld: 1 };
 
     function calculate() {
       let milk = i1.value * 0.8 + i3.value * 0.32;
@@ -194,14 +194,29 @@
       let str = `
         需再加入：<br>
         - 牛奶：<strong>${(n * base2.milk - milk).toFixed(1)}</strong> g<br>
-        - 发喜淡奶油：<strong>${(n * base2.cream - cream).toFixed(1)}</strong> g<br>
+        - 淡奶油：<strong>${(n * base2.cream - cream).toFixed(1)}</strong> g<br>
         - 椰子水：<strong>${(n * base2.water - water).toFixed(1)}</strong> g<br>
         - 糖：<strong>${(n * base2.sugar).toFixed(1)}</strong> g<br>
         - 吉利丁片：<strong>${(n * base2.jld).toFixed(1)}</strong> 片
       `;
       result.innerHTML = str;
     }
+    function calculateNew() {
+      let milk = i1.value * 0.8 + i3.value * 0.32;
+      let water = i3.value * 0.6;
+      let cream = i1.value * 0.2 + i3.value * 0.08;
+      let n = i2.value;
 
+      let str = `
+        需再加入：<br>
+        - 牛奶：<strong>${(n * base3.milk - milk).toFixed(1)}</strong> g<br>
+        - 淡奶油：<strong>${(n * base3.cream - cream).toFixed(1)}</strong> g<br>
+        - 椰子水：<strong>${(n * base3.water - water).toFixed(1)}</strong> g<br>
+        - 糖：<strong>${(n * base3.sugar).toFixed(1)}</strong> g<br>
+        - 吉利丁片：<strong>${(n * base3.jld).toFixed(1)}</strong> 片
+      `;
+      result.innerHTML = str;
+    }
     function calculateY() {
       let y = i4.value;
       let str = `
